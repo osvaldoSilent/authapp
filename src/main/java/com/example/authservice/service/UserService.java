@@ -2,10 +2,7 @@
 // UserService.java
 package com.example.authservice.service;
 
-import com.example.authservice.dto.UserRequestDTO;
-import com.example.authservice.dto.UserRequestLoginDTO;
-import com.example.authservice.dto.UserResponseDTO;
-import com.example.authservice.dto.UserResponseLoginDto;
+import com.example.authservice.dto.*;
 import com.example.authservice.model.User;
 import com.example.authservice.repository.UserRepository;
 import com.example.authservice.security.JwtUtil;
@@ -20,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -103,5 +101,61 @@ public class UserService {
         }
     }
 
+    public boolean deleteByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean deleteByUsername(UserDeleteRequestDTO user) {
+        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
+
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updateByUsername(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean updateByUsername(UserUpdateRequestDTO userDTO) {
+        Optional<User> userOptional = userRepository.findByUsername(userDTO.getCurrentUserName());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if(StringUtils.hasText(userDTO.getNewUserName())){
+                if (!userDTO.getNewUserName().equals(user.getUsername()) &&
+                        userRepository.findByUsername(userDTO.getNewUserName()).isPresent()) {
+                    throw new RuntimeException("El nuevo username ya está en uso");
+                }
+                user.setUsername(userDTO.getNewUserName());
+            }
+            if(StringUtils.hasText(userDTO.getNewPassword())){
+
+                user.setPassword(passwordEncoder.encode(userDTO.getNewPassword()));
+            }
+            if(StringUtils.hasText(userDTO.getNewRole())){
+                user.setRole(userDTO.getNewRole());
+            }
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 

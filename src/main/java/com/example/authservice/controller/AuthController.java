@@ -1,16 +1,14 @@
 // AuthController.java
 package com.example.authservice.controller;
 
-import com.example.authservice.dto.UserRequestDTO;
-import com.example.authservice.dto.UserRequestLoginDTO;
-import com.example.authservice.dto.UserResponseDTO;
-import com.example.authservice.dto.UserResponseLoginDto;
+import com.example.authservice.dto.*;
 import com.example.authservice.security.JwtUtil;
 import com.example.authservice.service.UserService;
 import com.example.authservice.model.User;
 import com.example.authservice.security.JwtUtil;
 import com.example.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,4 +50,47 @@ public class AuthController {
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    @DeleteMapping("/delete/user/{username}")
+    public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
+        boolean deleted = userService.deleteByUsername(username);
+        if (deleted) {
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
+    }
+
+    @DeleteMapping("/delete/user")
+    public ResponseEntity<String> deleteUserByUsername(@RequestBody UserDeleteRequestDTO userD) {
+        boolean deleted = userService.deleteByUsername(userD.getUsername());
+        if (deleted) {
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
+    }
+
+    //@PutMapping("/update/user/{username}")
+    /*public ResponseEntity<String> updateUserByUsername(@PathVariable String username) {
+        boolean deleted = userService.deleteByUsername(username);
+        if (deleted) {
+            return ResponseEntity.ok("Usuario eliminado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
+    }*/
+
+    @PutMapping("/update/user/")
+    public ResponseEntity<String> updateUserByUsername(@RequestBody UserUpdateRequestDTO userDTO) {
+
+        boolean updated = userService.updateByUsername(userDTO);
+
+        if (updated) {
+            return ResponseEntity.ok("Usuario actualizado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no actualizado");
+        }
+    }
+
 }
