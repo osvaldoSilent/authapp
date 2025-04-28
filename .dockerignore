@@ -1,0 +1,27 @@
+# 🧹 Carpetas de build (no necesarias dentro de la imagen)
+build/
+.gradle/
+
+# 🧠 Configuración del IDE
+.idea/
+
+# 📦 Dependencias cacheadas por Gradle (pueden regenerarse)
+**/gradle-wrapper.jar
+
+# 📁 Control de versiones
+.git
+.gitignore
+.gitattributes
+
+# 🛠️ Archivos del sistema / OS / editores
+.DS_Store
+Thumbs.db
+
+# 🗒️ Archivos de texto/documentación que no se requieren en la imagen final
+HELP.md
+
+# 🚫 Logs
+*.log
+
+# ✅ (Opcional) Si no quieres incluir pruebas en la imagen:
+# test/

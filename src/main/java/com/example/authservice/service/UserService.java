@@ -88,7 +88,7 @@ public class UserService {
             User user = (User) userRepository.findByUsername(dto.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-            String token = jwtUtil.generateToken(user.getUsername());
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
 
             return new UserResponseLoginDto(user.getUsername(), user.getRole(), token);
 

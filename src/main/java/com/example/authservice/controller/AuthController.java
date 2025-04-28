@@ -25,11 +25,6 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    @PostMapping("/register2")
     public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto) {
         UserResponseDTO response = userService.register(dto);
         return ResponseEntity.ok(response);
@@ -71,15 +66,6 @@ public class AuthController {
         }
     }
 
-    //@PutMapping("/update/user/{username}")
-    /*public ResponseEntity<String> updateUserByUsername(@PathVariable String username) {
-        boolean deleted = userService.deleteByUsername(username);
-        if (deleted) {
-            return ResponseEntity.ok("Usuario eliminado correctamente");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-        }
-    }*/
 
     @PutMapping("/update/user/")
     public ResponseEntity<String> updateUserByUsername(@RequestBody UserUpdateRequestDTO userDTO) {

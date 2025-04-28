@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  authapp:
+    build: .
+    container_name: authapp
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    restart: unless-stopped
