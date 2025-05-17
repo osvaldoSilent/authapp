@@ -46,6 +46,14 @@ public class AuthController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+
+
+    @GetMapping("/getUser")
+    public UserFullResponseDTO getUser(@RequestBody UserDeleteRequestDTO userDTO) {
+        return userService.getUserByUsername(userDTO.getUsername());
+
+    }
+
     @DeleteMapping("/delete/user/{username}")
     public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
         boolean deleted = userService.deleteByUsername(username);

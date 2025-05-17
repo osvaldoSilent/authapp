@@ -3,6 +3,7 @@
 package com.example.authservice.service;
 
 import com.example.authservice.dto.*;
+import com.example.authservice.exception.handled.UserNotFoundException;
 import com.example.authservice.model.User;
 import com.example.authservice.repository.UserRepository;
 import com.example.authservice.security.JwtUtil;
@@ -12,11 +13,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -37,13 +36,14 @@ public class UserService {
     }
 
     // 📌 Buscar usuario por username
-    public User getUserByUsername(String username) {
-        return (User) userRepository.findByUsername(username).orElse(null);
+    public UserFullResponseDTO getUserByUsername(String username) {
+        return userRepository.findDtoByUsername(username)
+                        .orElseThrow(() -> (RuntimeException) new UserNotFoundException(username));
     }
 
     // 📌 Crear usuario (verificando que no exista)
     public User createUser(User user) {
-        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
+        Optional<UserFullResponseDTO> existingUser = userRepository.findDtoByUsername(user.getUsername());
         if (existingUser.isPresent()) {
             throw new RuntimeException("El usuario ya existe");
         }
@@ -59,7 +59,7 @@ public class UserService {
     public UserResponseDTO register(UserRequestDTO dto) {
 
 
-        Optional<User> existingUser = userRepository.findByUsername(dto.getUsername());
+        Optional<UserFullResponseDTO> existingUser = userRepository.findDtoByUsername(dto.getUsername());
         if (existingUser.isPresent()) {
             throw new RuntimeException("El usuario ya existe");
         }
@@ -85,8 +85,8 @@ public class UserService {
                 throw new BadCredentialsException("Invalid credentials");
             }
 
-            User user = (User) userRepository.findByUsername(dto.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+            UserFullResponseDTO user = (UserFullResponseDTO) userRepository.findDtoByUsername(dto.getUsername())
+                    .orElseThrow(() -> (RuntimeException) new UserNotFoundException(dto.getUsername()));
 
             String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
 
@@ -102,7 +102,8 @@ public class UserService {
     }
 
     public boolean deleteByUsername(String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findUserEntityByUsername(username);
+
         if (userOptional.isPresent()) {
             userRepository.delete(userOptional.get());
             return true;
@@ -112,7 +113,7 @@ public class UserService {
     }
 
     public boolean deleteByUsername(UserDeleteRequestDTO user) {
-        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
+        Optional<User> userOptional =  userRepository.findUserEntityByUsername(user.getUsername());
 
         if (userOptional.isPresent()) {
             userRepository.delete(userOptional.get());
@@ -123,7 +124,7 @@ public class UserService {
     }
 
     public boolean updateByUsername(String username) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findUserEntityByUsername(username);
         if (userOptional.isPresent()) {
             userRepository.delete(userOptional.get());
             return true;
@@ -133,13 +134,13 @@ public class UserService {
     }
 
     public boolean updateByUsername(UserUpdateRequestDTO userDTO) {
-        Optional<User> userOptional = userRepository.findByUsername(userDTO.getCurrentUserName());
+        Optional<User> userOptional = userRepository.findUserEntityByUsername(userDTO.getCurrentUserName());
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if(StringUtils.hasText(userDTO.getNewUserName())){
                 if (!userDTO.getNewUserName().equals(user.getUsername()) &&
-                        userRepository.findByUsername(userDTO.getNewUserName()).isPresent()) {
+                        userRepository.findDtoByUsername(userDTO.getNewUserName()).isPresent()) {
                     throw new RuntimeException("El nuevo username ya está en uso");
                 }
                 user.setUsername(userDTO.getNewUserName());

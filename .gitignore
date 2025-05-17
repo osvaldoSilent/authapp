@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+.dockerignore
+Dockerfile
+docker-compose.yml
+Dockerfile.local
+k8s/
+
