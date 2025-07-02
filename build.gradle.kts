@@ -31,10 +31,10 @@ tasks.withType<Test> {
 sonar {
 	properties {
 		property("sonar.projectKey", "authapp")
-		property("sonar.organization", "osvaldevops") // según tu cuenta
+		property("sonar.organization", "osvaldosilent") // según tu cuenta
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.java.binaries", "build/classes")
-		property("sonar.login", System.getenv("SONAR_TOKEN") ?: "")
+		property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
 	}
 }
 
