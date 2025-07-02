@@ -35,8 +35,14 @@ sonar {
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.java.binaries", "build/classes")
 		property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
+		property("sonar.junit.reportPaths", "build/test-results/test")
+		property("sonar.gradle.skipCompile", "true")
 	}
 }
+tasks.named("sonar") {
+	dependsOn("test")
+}
+
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -68,16 +74,6 @@ sourceSets {
 		runtimeClasspath += output + compileClasspath
 	}
 }
-
-val sonarToken: String? = System.getenv("SONAR_TOKEN")
-val mongoUri: String? = System.getenv("MONGO_URI")
-
-/*sonarqube {
-	properties {
-		property("sonar.token", sonarToken ?: "")
-	}
-}*/
-
 
 //Crear la configuración de dependencias
 configurations.named("integrationTestImplementation") {
