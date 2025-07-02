@@ -9,6 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      DB_URI: ${{ secrets.DB_URI }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}
 
     steps:
       - name: Checkout code
@@ -26,12 +32,5 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-
       - name: 🔍 SonarCloud Analysis
         run: ./gradlew clean build sonar
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          DB_URI: ${{ secrets.DB_URI }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}

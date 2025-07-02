@@ -69,6 +69,7 @@ sourceSets {
 }
 
 val sonarToken: String? = System.getenv("SONAR_TOKEN")
+val mongoUri: String? = System.getenv("MONGO_URI")
 
 sonarqube {
 	properties {
