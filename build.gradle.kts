@@ -30,7 +30,7 @@ tasks.withType<Test> {
 
 sonar {
 	properties {
-		property("sonar.projectKey", "Osvaldevops_authapp")
+		property("sonar.projectKey", "authapp")
 		property("sonar.organization", "osvaldevops") // según tu cuenta
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.java.binaries", "build/classes")
