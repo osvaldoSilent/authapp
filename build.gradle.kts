@@ -34,6 +34,7 @@ sonar {
 		property("sonar.organization", "osvaldevops") // según tu cuenta
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.java.binaries", "build/classes")
+		property("sonar.login", System.getenv("SONAR_TOKEN") ?: "")
 	}
 }
 
