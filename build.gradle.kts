@@ -2,6 +2,8 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.sonarqube") version "4.4.1.3373"
+	jacoco
 }
 
 group = "com.example"
@@ -15,6 +17,24 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+jacoco {
+	toolVersion = "0.8.10"
+}
+
+
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "Osvaldevops_authapp")
+		property("sonar.organization", "osvaldevops") // según tu cuenta
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.java.binaries", "build/classes")
+	}
 }
 
 dependencies {
@@ -38,6 +58,68 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
+//Declarar el nuevo source set
+sourceSets {
+	create("integrationTest") {
+		java.srcDirs("src/integrationTest/java")
+		resources.srcDirs("src/integrationTest/resources")
+		compileClasspath += sourceSets["main"].output + configurations["testRuntimeClasspath"]
+		runtimeClasspath += output + compileClasspath
+	}
 }
+
+val sonarToken: String? = System.getenv("SONAR_TOKEN")
+
+sonarqube {
+	properties {
+		property("sonar.login", sonarToken ?: "")
+	}
+}
+
+
+//Crear la configuración de dependencias
+configurations.named("integrationTestImplementation") {
+	extendsFrom(configurations["testImplementation"])
+}
+
+//Crear la tarea integrationTest
+val integrationTest = tasks.register<Test>("integrationTest") {
+	description = "Runs integration tests."
+	group = "verification"
+	testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+	classpath = sourceSets["integrationTest"].runtimeClasspath
+	useJUnitPlatform()
+	shouldRunAfter("test")
+}
+
+/*
+* Generar archivos .exec separados para coberturaD
+* */
+integrationTest.configure {
+	extensions.configure<JacocoTaskExtension> {
+		setDestinationFile(layout.buildDirectory.file("jacoco/integrationTest.exec").get().asFile)
+	}
+}
+
+//
+/*
+* Crear reportes separados con JaCoCo
+* */
+registerJacocoReportTask("jacocoUnitTestReport", "/jacoco/test.exec", tasks.test)
+registerJacocoReportTask("jacocoIntegrationTestReport", "/jacoco/integrationTest.exec", integrationTest)
+
+fun registerJacocoReportTask(name: String, execFile: String, dependsOnTask: TaskProvider<*>) {
+	tasks.register<JacocoReport>(name) {
+		dependsOn(dependsOnTask)
+		reports {
+			xml.required.set(true)
+			html.required.set(true)
+		}
+		classDirectories.setFrom(fileTree("build/classes/java/main"))
+		sourceDirectories.setFrom(files("src/main/java"))
+		layout.buildDirectory.get().asFileTree.matching {
+			include(execFile)
+		}
+	}
+}
+

@@ -1,0 +1,4 @@
+DB_NAME=your database name
+DB_URI=mongodb+srv:...
+JWT_SECRET= "add your jwt secret"
+CORS_ALLOWED_ORIGIN=Allowed Origin

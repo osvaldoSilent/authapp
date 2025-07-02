@@ -25,3 +25,13 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew clean build
+
+
+      - name: 🔍 SonarCloud Analysis
+        run: ./gradlew clean build sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
