@@ -2,7 +2,8 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
-	id("org.sonarqube") version "4.4.1.3373"
+	id("org.sonarqube") version "4.2.1.3168"
+
 	jacoco
 }
 
@@ -28,21 +29,51 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-sonar {
+/*sonar {
 	properties {
 		property("sonar.projectKey", "authapp")
+		property("sonar.organization", "osvaldosilent")
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
+		property("sonar.gradle.skipCompile", "true")
+
+		//property("sonar.sources", listOf("src/main/java"))
+		properties["sonar.sources"] = listOf("src/main/java")
+		properties["sonar.tests"] = listOf("src/test/java")
+		properties["sonar.junit.reportPaths"] = listOf("build/test-results/test")
+		//property("sonar.tests", listOf("src/test/java"))
+		//property("sonar.java.binaries", "build/classes/java/main")
+		//property("sonar.junit.reportPaths", "build/test-results/test")
+		//property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+	}
+}*/
+
+sonar {
+	properties {
+		property("sonar.projectKey", "osvaldoSilent_authapp")
 		property("sonar.organization", "osvaldosilent") // según tu cuenta
 		property("sonar.host.url", "https://sonarcloud.io")
-		property("sonar.java.binaries", "build/classes")
+		//property("sonar.java.binaries", "build/classes")
 		property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
-		property("sonar.junit.reportPaths", "build/test-results/test")
+
+
+		property("sonar.junit.reportPaths", file("build/test-results/test").absolutePath.replace("\\", "/"))
+
+
 		property("sonar.gradle.skipCompile", "true")
+		property("sonar.java.binaries", "build/classes/java/main")
+		//property("sonar.java.test.binaries", "build/classes/java/test")
+
+		//property("sonar.sources", "src/main/java")
+		//properties["sonar.sources"] = listOf("src/main/java")
+
 	}
 }
-tasks.named("sonar") {
+
+
+tasks.matching { it.name in listOf("sonar", "sonarqube") }.configureEach {
 	dependsOn("test")
 }
-
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
