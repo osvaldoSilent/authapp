@@ -29,41 +29,20 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-/*sonar {
-	properties {
-		property("sonar.projectKey", "authapp")
-		property("sonar.organization", "osvaldosilent")
-		property("sonar.host.url", "https://sonarcloud.io")
-		property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
-		property("sonar.gradle.skipCompile", "true")
-
-		//property("sonar.sources", listOf("src/main/java"))
-		properties["sonar.sources"] = listOf("src/main/java")
-		properties["sonar.tests"] = listOf("src/test/java")
-		properties["sonar.junit.reportPaths"] = listOf("build/test-results/test")
-		//property("sonar.tests", listOf("src/test/java"))
-		//property("sonar.java.binaries", "build/classes/java/main")
-		//property("sonar.junit.reportPaths", "build/test-results/test")
-		//property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
-	}
-}*/
 
 sonar {
 	properties {
 		property("sonar.projectKey", "osvaldoSilent_authapp")
 		property("sonar.organization", "osvaldosilent") // según tu cuenta
 		property("sonar.host.url", "https://sonarcloud.io")
-		//property("sonar.java.binaries", "build/classes")
 		property("sonar.token", System.getenv("SONAR_TOKEN") ?: "")
-
-
 		property("sonar.junit.reportPaths", file("build/test-results/test").absolutePath.replace("\\", "/"))
-
-
 		property("sonar.gradle.skipCompile", "true")
 		property("sonar.java.binaries", "build/classes/java/main")
-		//property("sonar.java.test.binaries", "build/classes/java/test")
 
+
+		//property("sonar.java.test.binaries", "build/classes/java/test")
+		//property("sonar.java.binaries", "build/classes")
 		//property("sonar.sources", "src/main/java")
 		//properties["sonar.sources"] = listOf("src/main/java")
 
@@ -94,7 +73,21 @@ dependencies {
 	implementation("org.springframework.security:spring-security-crypto")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+	implementation("io.github.cdimascio:dotenv-java:3.0.0")
 }
+
+
+// Gestión de dependencias de Spring Cloud
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.0")
+	}
+}
+
+
 
 //Declarar el nuevo source set
 sourceSets {
