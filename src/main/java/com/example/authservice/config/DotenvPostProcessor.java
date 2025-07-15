@@ -5,17 +5,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.javapoet.ClassName;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class DotenvPostProcessor implements EnvironmentPostProcessor {
 
+    private static final Logger LOGGER = Logger.getLogger( ClassName.class.getName() );
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        System.out.println("🚀 DotenvPostProcessor is running");
+
+        LOGGER.log( Level.FINE, "🚀 DotenvPostProcessor is running");
 
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        System.out.println("✔️ Loaded from .env: " + dotenv.get("DB_URI"));
+        LOGGER.log( Level.FINE, "✔️ Loaded from .env: " + dotenv.get("DB_URI"));
 
         //log.info("Mongo URI from .env = {}", dotenv.get("DB_URI"));
         MapPropertySource dotenvSource = new MapPropertySource(

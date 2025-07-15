@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class UserDeleteRequestDTO {
-    String Username;
+    String username;
 }
