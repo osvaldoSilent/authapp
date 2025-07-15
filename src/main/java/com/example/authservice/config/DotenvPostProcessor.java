@@ -19,7 +19,7 @@ public class DotenvPostProcessor implements EnvironmentPostProcessor {
 
         LOGGER.log( Level.FINE, "🚀 DotenvPostProcessor is running");
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        LOGGER.log( Level.FINE, "✔️ Loaded from .env: " + dotenv.get("DB_URI"));
+        LOGGER.log(Level.FINE, "✅ Loaded from .env: {0}", dotenv.get("DB_URI"));
 
         MapPropertySource dotenvSource = new MapPropertySource(
                 "dotenv",
