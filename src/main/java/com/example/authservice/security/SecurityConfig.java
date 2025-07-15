@@ -37,6 +37,12 @@ public class SecurityConfig {
                         //.anyRequest().authenticated()
                         .anyRequest().permitAll()
                 );
+        http
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives("default-src 'self'; script-src 'self'; style-src 'self'")
+                        )
+                );
         return http.build();
     }
 
