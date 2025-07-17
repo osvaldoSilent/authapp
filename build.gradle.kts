@@ -39,7 +39,7 @@ sonar {
 		property("sonar.junit.reportPaths", file("build/test-results/test").absolutePath.replace("\\", "/"))
 		property("sonar.gradle.skipCompile", "true")
 		property("sonar.java.binaries", "build/classes/java/main")
-
+		property("sonar.coverage.exclusions", "**/config/**,**/dto/**,**/exception/**,**/model/**,**/repository/**")
 
 		//property("sonar.java.test.binaries", "build/classes/java/test")
 		//property("sonar.java.binaries", "build/classes")
