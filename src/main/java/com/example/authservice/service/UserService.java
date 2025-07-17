@@ -39,7 +39,7 @@ public class UserService {
     // 📌 Buscar usuario por username
     public UserFullResponseDTO getUserByUsername(String username) {
         return userRepository.findDtoByUsername(username)
-                        .orElseThrow(() -> (RuntimeException) new UserNotFoundException(username));
+                        .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     // 📌 Crear usuario (verificando que no exista)
@@ -114,15 +114,6 @@ public class UserService {
         }
     }
 
-    public boolean updateByUsername(String username) {
-        Optional<User> userOptional = userRepository.findUserEntityByUsername(username);
-        if (userOptional.isPresent()) {
-            userRepository.delete(userOptional.get());
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     public boolean updateByUsername(UserUpdateRequestDTO userDTO) {
         Optional<User> userOptional = userRepository.findUserEntityByUsername(userDTO.getCurrentUserName());

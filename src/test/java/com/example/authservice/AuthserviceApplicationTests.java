@@ -10,6 +10,7 @@ class AuthserviceApplicationTests {
 
 	@Test
 	void contextLoads() {
+		//Testing ApplicationContext
 	}
 
 }
