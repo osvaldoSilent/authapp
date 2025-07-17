@@ -21,7 +21,7 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private static final long expirationTime = 864_000_00; // 1 día en milisegundos
+    private static final long EXPIRATION_TIME = 864_000_00; // 1 día en milisegundos
 
     Key key;
 
@@ -63,7 +63,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .claim("role", role)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();

@@ -3,13 +3,14 @@
 package com.example.authservice.service;
 
 import com.example.authservice.dto.*;
+import com.example.authservice.exception.handled.BadCredentialsException;
+import com.example.authservice.exception.handled.UserAlreadyExistsException;
 import com.example.authservice.exception.handled.UserNotFoundException;
 import com.example.authservice.model.User;
 import com.example.authservice.repository.UserRepository;
 import com.example.authservice.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -45,7 +46,7 @@ public class UserService {
     public User createUser(User user) {
         Optional<UserFullResponseDTO> existingUser = userRepository.findDtoByUsername(user.getUsername());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("El usuario ya existe");
+            throw new UserAlreadyExistsException(user.getUsername());
         }
         return userRepository.save(user);
     }
@@ -61,7 +62,7 @@ public class UserService {
 
         Optional<UserFullResponseDTO> existingUser = userRepository.findDtoByUsername(dto.getUsername());
         if (existingUser.isPresent()) {
-            throw new RuntimeException("El usuario ya existe");
+            throw new UserAlreadyExistsException(dto.getUsername());
         }
         User user = User.builder()
                 .username(dto.getUsername())
@@ -75,30 +76,20 @@ public class UserService {
     }
 
     public UserResponseLoginDto login(UserRequestLoginDTO dto) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
+        );
 
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
-            );
-
-            if (!authentication.isAuthenticated()) {
-                throw new BadCredentialsException("Invalid credentials");
-            }
-
-            UserFullResponseDTO user = (UserFullResponseDTO) userRepository.findDtoByUsername(dto.getUsername())
-                    .orElseThrow(() -> (RuntimeException) new UserNotFoundException(dto.getUsername()));
-
-            String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
-
-            return new UserResponseLoginDto(user.getUsername(), user.getRole(), token);
-
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Usuario o contraseña incorrectos");
-        } catch (Exception e) {
-            throw new RuntimeException("Error inesperado: " + e.getMessage());
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        if (!authentication.isAuthenticated()) {
+            throw new BadCredentialsException();
         }
+
+        UserFullResponseDTO user = userRepository.findDtoByUsername(dto.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(dto.getUsername()));
+
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+
+        return new UserResponseLoginDto(user.getUsername(), user.getRole(), token);
     }
 
     public boolean deleteByUsername(String username) {
@@ -141,7 +132,7 @@ public class UserService {
             if(StringUtils.hasText(userDTO.getNewUserName())){
                 if (!userDTO.getNewUserName().equals(user.getUsername()) &&
                         userRepository.findDtoByUsername(userDTO.getNewUserName()).isPresent()) {
-                    throw new RuntimeException("El nuevo username ya está en uso");
+                    throw new UserNotFoundException(userDTO.getNewUserName());
                 }
                 user.setUsername(userDTO.getNewUserName());
             }
