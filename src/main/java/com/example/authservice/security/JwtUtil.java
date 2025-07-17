@@ -19,7 +19,7 @@ import java.util.function.Function;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    String secretKey;
 
     private static final long EXPIRATION_TIME = 864_000_00; // 1 día en milisegundos
 
