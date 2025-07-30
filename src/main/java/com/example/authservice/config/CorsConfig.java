@@ -11,17 +11,18 @@ public class CorsConfig {
     @Value("${app.cors.allowed-origin:*}")
     private String allowedOrigin;
 
-    @Bean
+    /*@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(allowedOrigin)
+                        //.allowedOrigins(allowedOrigin)
+                        .allowedOriginPatterns("*")//cambiar en produccion
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
-    }
+    }*/
 }

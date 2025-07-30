@@ -43,10 +43,10 @@ class JwtUtilTest {
     }
 
     @Test
-    void shouldDetectExpiredToken() throws InterruptedException {
-        // Override expiration manually usando reflexión o redefinición parcial si fuera configurable.
-        // Aquí lo simulamos forzando el clock si tuvieras una abstracción.
-        // Como no es fácilmente modificable sin refactor, puedes dejar este test para integración.
+    void shouldDetectExpiredToken() {
+        jwtUtil.setExpirationTime(-1000); // ya expirado
+        String token = jwtUtil.generateToken("foo", "ROLE_USER");
+        assertFalse(jwtUtil.isTokenValid(token, "foo"));
     }
 
     @Test

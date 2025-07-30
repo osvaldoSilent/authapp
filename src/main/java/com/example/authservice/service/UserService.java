@@ -2,7 +2,7 @@
 // UserService.java
 package com.example.authservice.service;
 
-import com.example.authservice.dto.*;
+import com.example.authservice.dto.user.*;
 import com.example.authservice.exception.handled.BadCredentialsException;
 import com.example.authservice.exception.handled.UserAlreadyExistsException;
 import com.example.authservice.exception.handled.UserNotFoundException;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;

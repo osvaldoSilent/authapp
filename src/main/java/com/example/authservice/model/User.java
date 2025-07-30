@@ -6,13 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//@Entity
-//@Table(name = "app_user") // Evitar el uso de "user"
-//@Document(collection = "app_user") // Nombre de la colección en MongoDB
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

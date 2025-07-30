@@ -2,7 +2,7 @@
 // UserRepository.java
 package com.example.authservice.repository;
 
-import com.example.authservice.dto.UserFullResponseDTO;
+import com.example.authservice.dto.user.UserFullResponseDTO;
 import com.example.authservice.model.User;
 import java.util.Optional;
 import org.springframework.data.mongodb.repository.MongoRepository;

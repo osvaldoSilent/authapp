@@ -2,13 +2,13 @@ package com.example.authservice.controller;
 
 import static org.mockito.Mockito.when;
 
-import com.example.authservice.dto.UserDeleteRequestDTO;
-import com.example.authservice.dto.UserFullResponseDTO;
-import com.example.authservice.dto.UserRequestDTO;
-import com.example.authservice.dto.UserRequestLoginDTO;
-import com.example.authservice.dto.UserResponseDTO;
-import com.example.authservice.dto.UserResponseLoginDto;
-import com.example.authservice.dto.UserUpdateRequestDTO;
+import com.example.authservice.dto.user.UserDeleteRequestDTO;
+import com.example.authservice.dto.user.UserFullResponseDTO;
+import com.example.authservice.dto.user.UserRequestDTO;
+import com.example.authservice.dto.user.UserRequestLoginDTO;
+import com.example.authservice.dto.user.UserResponseDTO;
+import com.example.authservice.dto.user.UserResponseLoginDto;
+import com.example.authservice.dto.user.UserUpdateRequestDTO;
 import com.example.authservice.exception.GlobalExceptionHandler;
 import com.example.authservice.model.User;
 import com.example.authservice.service.UserService;

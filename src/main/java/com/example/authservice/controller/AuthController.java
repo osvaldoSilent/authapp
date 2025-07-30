@@ -1,6 +1,6 @@
 package com.example.authservice.controller;
 
-import com.example.authservice.dto.*;
+import com.example.authservice.dto.user.*;
 import com.example.authservice.service.UserService;
 import com.example.authservice.model.User;
 import lombok.RequiredArgsConstructor;

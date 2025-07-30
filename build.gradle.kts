@@ -77,6 +77,9 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
 	implementation("io.github.cdimascio:dotenv-java:3.0.0")
+
+	implementation ("org.springframework.boot:spring-boot-starter-validation")
+
 }
 
 

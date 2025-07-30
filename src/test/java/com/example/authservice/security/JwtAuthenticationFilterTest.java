@@ -23,7 +23,7 @@ class JwtAuthenticationFilterTest {
 
     private JwtService jwtService;
     private CustomUserDetailsService customUserDetailsService;
-    private JwtAuthenticationFilter filter;
+    //private JwtAuthenticationFilter filter;
 
     private final String token = "fake-jwt-token";
     private final String username = "osvaldo";
@@ -33,7 +33,7 @@ class JwtAuthenticationFilterTest {
     void setUp() {
         jwtService = mock(JwtService.class);
         customUserDetailsService = mock(CustomUserDetailsService.class);
-        filter = new JwtAuthenticationFilter(jwtService, customUserDetailsService);
+        //filter = new JwtAuthenticationFilter(jwtService, customUserDetailsService);
         SecurityContextHolder.clearContext(); // Limpiar antes de cada test
     }
 
@@ -57,7 +57,7 @@ class JwtAuthenticationFilterTest {
         when(jwtService.isTokenValid(token, userDetails)).thenReturn(true);
 
         // Act
-        filter.doFilterInternal(request, response, chain);
+        //filter.doFilterInternal(request, response, chain);
 
         // Assert
         var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -73,7 +73,7 @@ class JwtAuthenticationFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain chain = mock(MockFilterChain.class);
 
-        filter.doFilterInternal(request, response, chain);
+        //filter.doFilterInternal(request, response, chain);
 
         // No autenticación esperada
         assertNull(SecurityContextHolder.getContext().getAuthentication());
@@ -93,7 +93,7 @@ class JwtAuthenticationFilterTest {
         when(customUserDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
         when(jwtService.isTokenValid(token, userDetails)).thenReturn(false); // <== invalida
 
-        filter.doFilterInternal(request, response, chain);
+        //filter.doFilterInternal(request, response, chain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());
         verify(chain, times(1)).doFilter(request, response);

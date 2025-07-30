@@ -22,8 +22,19 @@ public class JwtUtil {
     String secretKey;
 
     private static final long EXPIRATION_TIME = 864_000_00; // 1 día en milisegundos
-
+    long expirationTime = EXPIRATION_TIME;
     Key key;
+
+    public void setExpirationTime(long expirationTime) {
+        if (!isTestEnvironment()) {
+            throw new IllegalStateException("Modifying expiration time is only allowed in test context");
+        }
+        this.expirationTime = expirationTime;
+    }
+
+    private boolean isTestEnvironment() {
+        return System.getProperty("ENV") != null && System.getProperty("ENV").equals("test");
+    }
 
     @PostConstruct
     public void init() {
